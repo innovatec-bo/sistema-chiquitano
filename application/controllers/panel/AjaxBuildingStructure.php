@@ -44,7 +44,7 @@ class AjaxBuildingStructure extends PrivateController
 
     public function getByIdFromV2($buildingStructureId)
     {
-        $client = new Client(['base_uri' => getenv('SEREBO2_URL')]);
+        $client = new Client(['base_uri' => getenv('SISTEMA_CHIQUITANOV2_URL')]);
         $apiResponse = $client->request('GET', 'api/v1/building-structures/'.$buildingStructureId);
         $arrayResponse = json_decode($apiResponse->getBody(),true);
         echo json_encode($arrayResponse);exit;

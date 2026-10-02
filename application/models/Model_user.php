@@ -806,7 +806,7 @@ class Model_user extends Model_user_base
 
         // 2. Enviar la información a Laravel mediante Guzzle
         $client = new \GuzzleHttp\Client([
-            'base_uri' => getenv('SEREBO2_URL').'/api/v1/',
+            'base_uri' => getenv('SISTEMA_CHIQUITANOV2_URL').'/api/v1/',
             'timeout'  => 3.0,
         ]);
 

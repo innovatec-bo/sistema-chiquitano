@@ -98,7 +98,7 @@ class AjaxLaborCost extends PrivateController
                     $currentUser = PrivateController::getSessionUser();
                     $userId = isset($currentUser) ? $currentUser->id:NULL;
 
-                    $client = new Client(['base_uri' => getenv('SEREBO2_URL')]);
+                    $client = new Client(['base_uri' => getenv('SISTEMA_CHIQUITANOV2_URL')]);
                     $apiResponse = $client->request('POST', 'api/v1/labor-cost-change-log',[
                         'form_params' => [
                             "labor_cost_id" => $laborCostId,
@@ -242,7 +242,7 @@ class AjaxLaborCost extends PrivateController
 
     public function getByIdFromV2($laborCostId)
     {
-        $client = new Client(['base_uri' => getenv('SEREBO2_URL')]);
+        $client = new Client(['base_uri' => getenv('SISTEMA_CHIQUITANOV2_URL')]);
         $apiResponse = $client->request('GET', 'api/v1/labor-costs/'.$laborCostId);
         $arrayResponse = json_decode($apiResponse->getBody(),true);
         echo json_encode($arrayResponse);exit;

@@ -1177,7 +1177,7 @@ class Project extends PrivateController
 
     public function downloadLaborCostChangeLogReport($projectId)
     {
-        $client = new Client(['base_uri' => getenv('SEREBO2_URL')]);
+        $client = new Client(['base_uri' => getenv('SISTEMA_CHIQUITANOV2_URL')]);
         $apiResponse = $client->request('GET', 'api/v1/labor-cost-change-log/'.$projectId);
         $arrayResponse = json_decode($apiResponse->getBody(),true);
         $project = Model_project::getById($projectId);

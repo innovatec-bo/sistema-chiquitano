@@ -743,7 +743,7 @@ class PrivateController extends PublicController
 
     public static function updateWorkflow($projectIds)
     {
-        $client = new Client(['base_uri' => getenv('SEREBO2_URL')]);
+        $client = new Client(['base_uri' => getenv('SISTEMA_CHIQUITANOV2_URL')]);
         $apiResponse = $client->request('POST', 'api/v1/workflows',[
             'form_params' => [
                 "projects" => $projectIds,

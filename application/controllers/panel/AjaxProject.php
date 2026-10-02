@@ -62,7 +62,7 @@ class AjaxProject extends PrivateController
         }
     
         // ── Llamar a la API de Serebo2 ────────────────────────────────────────
-        $apiUrl  = getenv('SEREBO2_URL') . '/api/v1/workflows?' . http_build_query($queryParams);
+        $apiUrl  = getenv('SISTEMA_CHIQUITANOV2_URL') . '/api/v1/workflows?' . http_build_query($queryParams);
         $response = $this->_callSerebo2Api($apiUrl);
 
         if (!$response['success'])
