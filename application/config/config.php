@@ -31,7 +31,7 @@ switch (ENVIRONMENT)
         break;
     case 'testing':
     case 'production':
-        $config['base_url']	= 'http://serebo.toqueeltimbre.com/';
+        $config['base_url']	= 'https://sistema.chiquitano-group.com/';
         break;
 }
 /*
