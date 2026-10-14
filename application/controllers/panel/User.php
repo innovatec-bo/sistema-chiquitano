@@ -48,7 +48,9 @@ class User extends PrivateController
         $this->form_validation->set_rules('confirm-password', 'Confirm password', 'trim|required|matches[password]');
 
         $roleList = Model_role::getAll(100,0);
+        $responsibleGroupList = Model_status_responsible::getStatusSetByResponsibleGroup();
         $data["roleList"] = $roleList;
+        $data["responsibleGroupList"] = $responsibleGroupList;
 
         if($this->form_validation->run() === FALSE)
         {
@@ -57,7 +59,7 @@ class User extends PrivateController
         else
         {
             $formData = $this->input->post();
-            $responsibleGroup = isset($formData["responsible-group"])?$formData["responsible-group"]:"";
+            $responsibleGroup = $formData["responsible-group"]??[];
             $firstName = $formData["first-name"];
             $lastName = $formData["last-name"];
             $email = $formData["email"];
@@ -73,9 +75,11 @@ class User extends PrivateController
             );
             $user->save();
             Model_user_role::saveUserRoleList($user->getId(), $userRoleList, $this->sessionUser);
-            if($responsibleGroup != "")
+            if(count($responsibleGroup) > 0)
             {
-                Model_status_responsible::saveUserResponsible($user->getId(),$responsibleGroup);
+                foreach ($responsibleGroup as $group) {
+                    Model_status_responsible::saveUserResponsible($user->getId(),$group);
+                }
             }
             $this->session->set_flashdata("successMessage", "User was added successfully");
             redirect(base_url("panel/User"));

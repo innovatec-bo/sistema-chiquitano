@@ -81,7 +81,34 @@
                                     </div>
 
                             </div>
-                            <div class="col-md-12">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label>Responsable en los siguiente estados</label>
+                                    <?php
+                                    $html = "<br>";
+                                    foreach ($responsibleGroupList as $group => $statuses)
+                                    {
+                                        $html .="
+                                        <div class='checkbox'>
+                                            <label style='font-weight: bold;'>
+                                                <input type='checkbox' name='responsible-group[]' value='".$group."'>".$group.'
+                                            </label>
+                                        </div>
+                                        <ol>
+                                        ';
+                                        foreach ($statuses as $status)
+                                        {
+                                            $html .= '
+                                            <li>'.$status.'</li>
+                                            ';
+                                        }
+                                        $html .="</ol>";
+                                    }
+                                    echo $html;
+                                    ?>
+                                </div>
+                            </div>
+                            <!-- <div class="col-md-12">
                                 <div class="form-group">
                                     <label>Responsable en</label>
                                     <div class="checkbox">
@@ -90,7 +117,7 @@
                                         </label>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <button type="submit" class="btn btn-primary">Save</button>
