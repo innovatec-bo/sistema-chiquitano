@@ -82,7 +82,7 @@
 								</div>
 							</div>
 							<div class="row">
-								<div class="col-lg-12">
+								<div class="col-lg-6">
 									<div class="form-group">
 										<label>Roles</label>
 										<?php
@@ -103,6 +103,32 @@
 										echo $html;
 										?>
 										<div id="role-error-container"></div>
+									</div>
+								</div>
+								<div class="col-lg-6">
+									<div class="form-group">
+										<label>Responsable en los siguiente estados</label>
+										<?php
+										$html = "<br>";
+										foreach ($responsibleGroupList as $group => $statuses)
+										{
+											$checked = in_array($group, $checkedGroups) ? "checked" : "";
+											$html .= "
+											<div class='checkbox'>
+												<label style='font-weight: bold;'>
+													<input type='checkbox' name='responsible-group[]' " . $checked . " value='" . html_escape($group) . "'>" . html_escape($group) . "
+												</label>
+											</div>
+											<ol>
+											";
+											foreach ($statuses as $status)
+											{
+												$html .= '<li>' . html_escape($status) . '</li>';
+											}
+											$html .= "</ol>";
+										}
+										echo $html;
+										?>
 									</div>
 								</div>
 							</div>

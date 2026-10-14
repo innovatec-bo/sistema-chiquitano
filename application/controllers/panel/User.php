@@ -116,6 +116,25 @@ class User extends PrivateController
         $data["roleList"] = $roleList;
         $data["user"] = $user->toArray();
         $data["userRoleList"] = $userRoleList;
+        $responsibleGroupList = Model_status_responsible::getStatusSetByResponsibleGroup();
+        $data["responsibleGroupList"] = $responsibleGroupList;
+        $userResponsibleCurrentData = Model_status_responsible::getUsersResponsible("", $user->getId());
+
+        // Un grupo se considera marcado si el usuario tiene al menos uno de sus estados activos
+        if ($this->input->post()) {
+            $checkedGroups = $this->input->post("responsible-group") ?? [];
+        } else {
+            $currentKeywords = array_column($userResponsibleCurrentData, "keyword_pst");
+            $checkedGroups = [];
+            foreach ($responsibleGroupList as $group => $statuses) {
+                if (count(array_intersect($statuses, $currentKeywords)) > 0) {
+                    $checkedGroups[] = $group;
+                }
+            }
+        }
+        $data["checkedGroups"] = $checkedGroups;
+
+        // dd($responsibleGroupList, $userResponsibleCurrentData);
         //TODO:this variable is passed to define weather show or not the role section, would be handled as functionality.
         $data["isSuperAdmin"] = $isSuperAdmin;
         if($this->form_validation->run() === FALSE)
@@ -129,7 +148,7 @@ class User extends PrivateController
             $lastName = $formData["last-name"];
             $umbo = str_replace(",","",$formData["umbo"]);
             $roleListToSave = $formData["roles"];
-
+            $responsibleGroup = $formData["responsible-group"] ?? [];
             $user->setFirstName($firstName);
             $user->setLastName($lastName);
             $user->setUMBO($umbo);
@@ -144,6 +163,17 @@ class User extends PrivateController
             {
                 Model_user_role::saveUserRoleList($user->getId(), $roleListToSave, $this->sessionUser);
             }
+           
+            if($isSuperAdmin == 1)
+            {
+                $responsibleGroup = $formData["responsible-group"] ?? [];
+                Model_status_responsible::syncUserResponsible(
+                    $user->getId(),
+                    $responsibleGroup,
+                    $this->sessionUser->id
+                );
+            }
+
             $user->disparar_sincronizacion_roles_a_laravel();
             $this->session->set_flashdata("successMessage", "User was updated successfully.");
 			redirect(current_url());

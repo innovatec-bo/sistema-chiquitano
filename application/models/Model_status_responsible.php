@@ -90,7 +90,7 @@ class Model_status_responsible extends Model_status_responsible_base
     }
 
 
-    public static function getStatusSetByResponsibleGroup($responsibleGroup)
+    public static function getStatusSetByResponsibleGroup(string $responsibleGroup = "")
     {
         //Responsible on design
         $arrayStatus["design_process"][] = "design";
@@ -128,7 +128,7 @@ class Model_status_responsible extends Model_status_responsible_base
         $arrayStatus["warehouse_process"][] = "deliver_materials";
         $arrayStatus["warehouse_process"][] = "return_materials";
 
-        return $arrayStatus[$responsibleGroup];
+        return $arrayStatus[$responsibleGroup] ?? $arrayStatus;
     }
 
     public static function saveUserResponsible($userId, $responsibleGroup)
@@ -158,5 +158,102 @@ class Model_status_responsible extends Model_status_responsible_base
         where deleted_sre != 1 and active_sre = 1
         order by order_pst
         ";
+    }
+
+    public static function syncUserResponsible(int $userId, array $selectedGroups, $editorUserId = NULL)
+    {
+        $ci = &get_instance();
+        $ci->load->database();
+
+        $allGroups = static::getStatusSetByResponsibleGroup();
+
+        // Solo se aceptan grupos que existan (evita valores manipulados en el POST)
+        $selectedGroups = array_intersect($selectedGroups, array_keys($allGroups));
+
+        $managedKeywords = array_merge(...array_values($allGroups));
+        $desiredKeywords = [];
+        foreach ($selectedGroups as $group) {
+            $desiredKeywords = array_merge($desiredKeywords, $allGroups[$group]);
+        }
+
+        // IDs de todos los estados que administra este formulario, y de los que deben quedar activos
+        $managedIds = [];
+        foreach (Model_project_status::getByStatusKeywordList($managedKeywords) as $status) {
+            $managedIds[] = (int)$status->getId();
+        }
+        $desiredIds = [];
+        if (count($desiredKeywords) > 0) {
+            foreach (Model_project_status::getByStatusKeywordList($desiredKeywords) as $status) {
+                $desiredIds[] = (int)$status->getId();
+            }
+        }
+
+        // Filas actuales del usuario (activas e inactivas), agrupadas por estado
+        $rows = $ci->db->select("id_sre, status_id_sre, active_sre")
+            ->where("user_id_sre", $userId)
+            ->where("deleted_sre !=", 1)
+            ->get("wfl_status_responsibles")
+            ->result_array();
+        $rowsByStatus = [];
+        foreach ($rows as $row) {
+            $rowsByStatus[(int)$row["status_id_sre"]][] = $row;
+        }
+
+        $toDeactivate = [];
+        $toReactivate = [];
+        $toInsert = [];
+
+        // Desactivar lo que ya no está marcado
+        foreach ($managedIds as $statusId) {
+            if (in_array($statusId, $desiredIds, true)) {
+                continue;
+            }
+            foreach ($rowsByStatus[$statusId] ?? [] as $row) {
+                if ((int)$row["active_sre"] === 1) {
+                    $toDeactivate[] = $row["id_sre"];
+                }
+            }
+        }
+
+        // Reactivar o insertar lo que sí está marcado
+        foreach ($desiredIds as $statusId) {
+            $statusRows = $rowsByStatus[$statusId] ?? [];
+            if (count($statusRows) === 0) {
+                $toInsert[] = $statusId;
+                continue;
+            }
+            $hasActive = false;
+            foreach ($statusRows as $row) {
+                if ((int)$row["active_sre"] === 1) {
+                    $hasActive = true;
+                    break;
+                }
+            }
+            if (!$hasActive) {
+                $toReactivate[] = $statusRows[0]["id_sre"]; // se reactiva solo una
+            }
+        }
+
+        $audit = [
+            "editedon_sre" => date("Y-m-d H:i:s"),
+            "editedby_sre" => $editorUserId,
+        ];
+
+        $ci->db->trans_start();
+        if (count($toDeactivate) > 0) {
+            $ci->db->where_in("id_sre", $toDeactivate)
+                ->update("wfl_status_responsibles", ["active_sre" => 0] + $audit);
+        }
+        if (count($toReactivate) > 0) {
+            $ci->db->where_in("id_sre", $toReactivate)
+                ->update("wfl_status_responsibles", ["active_sre" => 1] + $audit);
+        }
+        foreach ($toInsert as $statusId) {
+            $statusResponsible = new Model_status_responsible($userId, $statusId);
+            $statusResponsible->save();
+        }
+        $ci->db->trans_complete();
+
+        return $ci->db->trans_status();
     }
 }
