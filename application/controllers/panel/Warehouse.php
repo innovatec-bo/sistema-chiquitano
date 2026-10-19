@@ -115,7 +115,7 @@ class Warehouse extends PrivateController
 			$entryDate = date_format($entryDate, 'Y-m-d');
 			$entryDate = $entryDate." ".date("H:i:s");
 			$materials = array_values($formData['summary']);
-			$summaryWithBuilderAndFiscal = array(4,10,11,14,15,18);
+			$summaryWithBuilderAndFiscal = array(4,10,11,14,15,17,18);
 			$summaryWithReservationNumber = array(2,3,8);
 			$currentUser = PrivateController::getSessionUser();
 			$currentUserId = isset($currentUser) ? $currentUser->id:NULL;
