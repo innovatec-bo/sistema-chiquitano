@@ -282,11 +282,11 @@
 
                     switch (getenv('ENVIRONMENT')) {
                         case 'development':
-                            $serebo2Url = 'http://serebo2.test/home/magic-login/' . $sessionUser->id;
+                            $serebo2Url = 'http://sistema-chiquitanov2.test/home/magic-login/' . $sessionUser->id;
                             break;
 
                         case 'production':
-                            $serebo2Url = 'https://serebo2.toqueeltimbre.com/home/magic-login/' . $sessionUser->id;
+                            $serebo2Url = 'https://sistemav2.chiquitano-group.com/home/magic-login/' . $sessionUser->id;
                             break;
                     }
                     if (in_array($sessionUser->id, [1, 2, 75, 89, 22, 19, 30, 91, 95])) {
