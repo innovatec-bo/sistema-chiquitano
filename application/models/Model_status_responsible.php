@@ -107,6 +107,11 @@ class Model_status_responsible extends Model_status_responsible_base
         $arrayStatus["digitization_process"][] = "rd_drawing";
         $arrayStatus["digitization_process"][] = "ri_drawing";
 
+        //Responsible on drawing
+        $arrayStatus["digitization_process"][] = "drawing";
+        $arrayStatus["digitization_process"][] = "rd_digitization";
+        $arrayStatus["digitization_process"][] = "ri_digitization";
+
         //Responsible on building process
         $arrayStatus["building_process"][] = "assign_to";
         $arrayStatus["building_process"][] = "building";
