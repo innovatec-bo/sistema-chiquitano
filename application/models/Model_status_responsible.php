@@ -102,15 +102,15 @@ class Model_status_responsible extends Model_status_responsible_base
         $arrayStatus["stakes_process"][] = "stakes";
         $arrayStatus["stakes_process"][] = "rd_stakes";
 
-        //Responsible on digitization
-        $arrayStatus["digitization_process"][] = "drawing";
-        $arrayStatus["digitization_process"][] = "rd_drawing";
-        $arrayStatus["digitization_process"][] = "ri_drawing";
-
         //Responsible on drawing
         $arrayStatus["drawing_process"][] = "drawing";
-        $arrayStatus["drawing_process"][] = "rd_digitization";
-        $arrayStatus["drawing_process"][] = "ri_digitization";
+        $arrayStatus["drawing_process"][] = "rd_drawing";
+        $arrayStatus["drawing_process"][] = "ri_drawing";
+
+        //Responsible on digitization
+        $arrayStatus["digitization_process"][] = "digitization";
+        $arrayStatus["digitization_process"][] = "rd_digitization";
+        $arrayStatus["digitization_process"][] = "ri_digitization";
 
         //Responsible on building process
         $arrayStatus["building_process"][] = "assign_to";
