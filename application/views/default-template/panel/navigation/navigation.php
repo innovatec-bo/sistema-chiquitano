@@ -279,19 +279,10 @@
                 <li class="divider"></li>
                 <li><a href="<?= base_url("Logout") ?>"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                     <?php
-
-                    switch (getenv('ENVIRONMENT')) {
-                        case 'development':
-                            $serebo2Url = 'http://sistema-chiquitanov2.test/home/magic-login/' . $sessionUser->id;
-                            break;
-
-                        case 'production':
-                            $serebo2Url = 'https://sistemav2.chiquitano-group.com/home/magic-login/' . $sessionUser->id;
-                            break;
-                    }
+                    $magicLoginSystemV2Url = getenv('BASE_URL').'/home/magic-login/' . $sessionUser->id;
                     if (in_array($sessionUser->id, [1, 2, 75, 89, 22, 19, 30, 91, 95])) {
                     ?>
-                <li><a href="<?= $serebo2Url ?>" target="_blank"><i class="fa fa-sign-in fa-fw"></i> Sistema v2</a>
+                <li><a href="<?= $magicLoginSystemV2Url ?>" target="_blank"><i class="fa fa-sign-in fa-fw"></i> Sistema v2</a>
                 <?php
                     }
                 ?>
