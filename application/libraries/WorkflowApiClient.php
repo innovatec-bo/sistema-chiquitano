@@ -225,7 +225,7 @@ class WorkflowApiClient
      */
     private static function _getBaseUrl() : string
     {
-        $baseUrl = getenv('SISTEMA_CHIQUITANOV2_URL') ?: '';
+        $baseUrl = getenv('SYSTEM_V2_URL') ?: '';
         return rtrim($baseUrl, '/') . '/api/v1';
     }
 

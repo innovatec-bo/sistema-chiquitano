@@ -24,16 +24,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |
 */
 $host = $_SERVER["HTTP_HOST"]??"";
-switch (ENVIRONMENT)
-{
-    case 'development':
-        $config['base_url']	= 'http://'.$host;
-        break;
-    case 'testing':
-    case 'production':
-        $config['base_url']	= 'https://sistema.chiquitano-group.com/';
-        break;
-}
+$config['base_url']	= getenv('BASE_URL');
 /*
 |--------------------------------------------------------------------------
 | Index File
