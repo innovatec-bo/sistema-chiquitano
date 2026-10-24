@@ -92,11 +92,15 @@ class Model_status_responsible extends Model_status_responsible_base
 
     public static function getStatusSetByResponsibleGroup(string $responsibleGroup = "")
     {
+        //Responsible on creation
+        $arrayStatus["creation_process"][] = "project_has_been_created";
+        
         //Responsible on design
         $arrayStatus["design_process"][] = "design";
         $arrayStatus["design_process"][] = "rectify_design";
         $arrayStatus["design_process"][] = "rectify_illustration";
         $arrayStatus["design_process"][] = "returned";
+        $arrayStatus["design_process"][] = "schedule";
 
         //Responsible on stakes
         $arrayStatus["stakes_process"][] = "stakes";
@@ -106,6 +110,11 @@ class Model_status_responsible extends Model_status_responsible_base
         $arrayStatus["drawing_process"][] = "drawing";
         $arrayStatus["drawing_process"][] = "rd_drawing";
         $arrayStatus["drawing_process"][] = "ri_drawing";
+
+        //Responsible on approvement
+        $arrayStatus["approvement_process"][] = "ready_to_send";
+        $arrayStatus["approvement_process"][] = "already_sent";
+        $arrayStatus["approvement_process"][] = "approvement";
 
         //Responsible on digitization
         $arrayStatus["digitization_process"][] = "digitization";
